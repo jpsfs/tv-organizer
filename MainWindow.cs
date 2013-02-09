@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using tv_organize.Data;
@@ -16,7 +17,6 @@ namespace tv_organizer
     public partial class MainWindow : Form
     {
         private BindingList<Episode> _episodeList;
-        private ISubtitlesAPI _subtitlesClient;
 
         public BindingList<Episode> EpisodeList
         {
@@ -33,11 +33,41 @@ namespace tv_organizer
                 EpisodeList = new BindingList<Episode>();
                 dataGridViewEpisodes.DataSource = EpisodeList;
 
+                DataGridViewComboBoxColumn colCombo = new DataGridViewComboBoxColumn();
+                colCombo.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                colCombo.HeaderText = "Available Languages";
+                colCombo.Name = "AvailableLanguages";
+                dataGridViewEpisodes.Columns.Add(colCombo);
+
                 checkBoxManualPath.DataBindings.Add(new Binding("Checked", textBoxSelectedPath, "Enabled"));
 
-                _subtitlesClient = new EasySubtitles();
             }
             catch { }
+        }
+
+
+        private void dataGridViewEpisodes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewEpisodes.Rows)
+            {
+                var episode = row.DataBoundItem as Episode;
+                if (episode != null)
+                {
+                    if (episode.ErrorHash) row.DefaultCellStyle.BackColor = Color.PaleVioletRed;
+
+                    var combo = row.Cells["AvailableLanguages"] as DataGridViewComboBoxCell;
+                    if (episode.AvailableLanguages != null)
+                    {
+                        combo.Items.Clear();
+                        foreach (string language in episode.AvailableLanguages)
+                        {
+                            combo.Items.Add(language);
+                        }
+                        
+                    }
+                    
+                }
+            }
         }
 
         private void buttonChoosePath_Click(object sender, EventArgs e)
@@ -45,11 +75,6 @@ namespace tv_organizer
             folderBrowserDialog.ShowDialog();
 
             textBoxSelectedPath.Text = folderBrowserDialog.SelectedPath;
-        }
-
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void textBoxSelectedPath_TextChanged(object sender, EventArgs e)
@@ -60,6 +85,7 @@ namespace tv_organizer
                 buttonDownloadSubtitles.Enabled = false;
                 buttonSearchSubtitles.Enabled = false;
                 buttonOrganizeFolders.Enabled = false;
+                comboBoxPrimaryLanguage.Enabled = false;
             }
             else
             {
@@ -135,6 +161,7 @@ namespace tv_organizer
 
         private void buttonSearchSubtitles_Click(object sender, EventArgs e)
         {
+            toolStripProgressBarLabel.Text = "Search for Subtitles Started!";
             backgroundWorkerSearchSubtitles.RunWorkerAsync(EpisodeList.ToList());
         }
 
@@ -158,12 +185,14 @@ namespace tv_organizer
         {
             toolStripProgressBarLabel.Text = "Search for Subtitles Complete!";
             buttonDownloadSubtitles.Enabled = true;
+            comboBoxPrimaryLanguage.Enabled = true;
 
         }
         #endregion
 
         private void buttonDownloadSubtitles_Click(object sender, EventArgs e)
         {
+            toolStripProgressBarLabel.Text = "Downloading Subtitles!";
             backgroundWorkerDownloadSubtitles.RunWorkerAsync(EpisodeList.ToList());
         }
 
@@ -192,8 +221,11 @@ namespace tv_organizer
 
         private void buttonOrganizeFolders_Click(object sender, EventArgs e)
         {
+            toolStripProgressBarLabel.Text = "Organizing Folders!";
             backgroundWorkerOrganizeFolders.RunWorkerAsync(new { EpisodeList = EpisodeList.ToList(), Path = textBoxSelectedPath.Text });
         }
+
+        #region Background Worker Organize Folders
 
         private void backgroundWorkerOrganizeFolders_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -256,6 +288,49 @@ namespace tv_organizer
         T Cast<T>(object obj, T type)
         {
            return (T)obj;
+        }
+
+        #endregion
+
+        private void linkLabelEasySubtitles_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://thesubdb.com");
+            
+        }
+
+        private void linkLabelDevelopedBy_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://jpsfs.com");
+        }
+
+        private void dataGridViewEpisodes_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            DataGridView dataGrid = sender as DataGridView;
+            if (dataGrid.Columns[dataGrid.CurrentCell.ColumnIndex].Name == "AvailableLanguages" && e.Control is ComboBox)
+            {
+                ComboBox comboBox = e.Control as ComboBox;
+                comboBox.SelectionChangeCommitted -= LastColumnComboSelectionChanged;
+                comboBox.SelectionChangeCommitted += LastColumnComboSelectionChanged;
+            }
+        }
+
+        private void LastColumnComboSelectionChanged(object sender, EventArgs e)
+        {
+            ComboBox combo = sender as ComboBox;
+            DataGridView dataGrid = combo.Parent.Parent as DataGridView;
+            Episode ep = EpisodeList[dataGrid.CurrentRow.Index];
+            if(combo.SelectedItem != null) ep.Language = combo.SelectedItem.ToString();
+        }
+
+        private void comboBoxPrimaryLanguage_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            foreach (Episode episode in EpisodeList)
+            {
+                if(episode.AvailableLanguages == null) continue;
+                if(episode.AvailableLanguages.Contains(comboBoxPrimaryLanguage.SelectedItem.ToString())){
+                    episode.Language = comboBoxPrimaryLanguage.SelectedItem.ToString();
+                }
+            }
         }
 
     }

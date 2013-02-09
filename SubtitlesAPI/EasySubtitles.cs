@@ -39,8 +39,18 @@ namespace tv_organize.SubtitlesAPI
         public void Search(Episode ep)
         {
             string fileName = Path.GetFileNameWithoutExtension(ep.FilePath);
-            string hash = tv_organizer.SubtitlesAPI.HashGenerator.Get(ep.FilePath);
 
+            string hash = "";
+            try
+            {
+                hash = tv_organizer.SubtitlesAPI.HashGenerator.Get(ep.FilePath);
+            }
+            catch
+            {
+                //Error generating the hash file... just continue
+                ep.ErrorHash = true;
+                return;
+            }
             //Handle HTTP Request
             string url = String.Format((EasySubtitles.Url + "?action=search&hash={0}"), hash);
 
@@ -49,6 +59,7 @@ namespace tv_organize.SubtitlesAPI
             
             webClient.OpenReadCompleted += webClient_OpenReadCompleted;
             webClient.OpenReadAsync(new Uri(url), ep);
+
 
         }
 
@@ -60,8 +71,10 @@ namespace tv_organize.SubtitlesAPI
             {
                 StreamReader sr = new StreamReader(e.Result);
                 // read the response into a string and show the result.
-                ep.Languages = sr.ReadToEnd();
+                ep.Language = sr.ReadToEnd();
+                ep.AvailableLanguages = ep.Language.Split(',');
 
+                ep.DownloadSub = true;
                 sr.Close();
             }
             catch { }
@@ -70,10 +83,21 @@ namespace tv_organize.SubtitlesAPI
 
         public void Download(Episode ep)
         {
-            if (ep.Languages == null || ep.Languages.Length == 0) return;
+            if (!ep.DownloadSub || ep.AvailableLanguages == null || ep.AvailableLanguages.Length == 0) return;
 
             string fileName = Path.GetFileNameWithoutExtension(ep.FilePath);
-            string hash = tv_organizer.SubtitlesAPI.HashGenerator.Get(ep.FilePath);
+            string hash = "";
+
+            try
+            {
+                hash = tv_organizer.SubtitlesAPI.HashGenerator.Get(ep.FilePath);
+            }
+            catch
+            {
+                //Error generating the hash file... just continue
+                ep.ErrorHash = true;
+                return;
+            }
             
             //Handle HTTP Request
             string url = String.Format((EasySubtitles.Url + "?action=download&language={0}&hash={1}&name={2}"), EasySubtitles.Language, hash, fileName);
@@ -90,7 +114,7 @@ namespace tv_organize.SubtitlesAPI
             if (e.Error == null)
             {
                 Episode ep = e.UserState as Episode;
-                ep.Downloaded = true;
+                ep.DownloadSub = false;
             }
         }
     }

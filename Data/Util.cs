@@ -39,5 +39,17 @@ namespace tv_organize.Data
             a[0] = char.ToUpper(a[0]);
             return new string(a);
         }
+
+        public static string UppercaseEachWord(string s)
+        {
+            var words = s.Split(' ');
+            var result = "";
+            foreach (var word in words)
+            {
+                result += UppercaseFirst(word) + " ";
+            }
+
+            return result.Trim();
+        }
     }
 }

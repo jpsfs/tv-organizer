@@ -14,8 +14,24 @@ namespace tv_organize.Data
         private string _show;
         private int _season;
         private int _episodeNumber;
-        private string _languages;
-        private bool _downloaded;
+        private string _language;
+        private bool _downloadSub;
+        private string[] _availableLanguages;
+
+        private bool _errorHash = false;
+
+        [Browsable(false)]
+        public bool ErrorHash
+        {
+            get { return _errorHash; }
+            set { _errorHash = value; this.NotifyPropertyChanged("ErrorHash"); }
+        }
+
+        public string[] AvailableLanguages
+        {
+            get { return _availableLanguages; }
+            set { _availableLanguages = value; this.NotifyPropertyChanged("AvailableLanguages"); }
+        }
 
         private static string _standard = @"^((?<series_name>.+?)[. _-]+)?s(?<season_num>\d+)[. _-]*e(?<ep_num>\d+)(([. _-]*e|-)(?<extra_ep_num>(?!(1080|720)[pi])\d+))*[. _-]*((?<extra_info>.+?)((?<![. _-])-(?<release_group>[^-]+))?)?$";
         private static string _fov = @"^((?<series_name>.+?)[\[. _-]+)?(?<season_num>\d+)x(?<ep_num>\d+)(([. _-]*x|-)(?<extra_ep_num>(?!(1080|720)[pi])(?!(?<=x)264)\d+))*[\]. _-]*((?<extra_info>.+?)((?<![. _-])-(?<release_group>[^-]+))?)?$";
@@ -27,7 +43,7 @@ namespace tv_organize.Data
             FilePath = filename;
             filename = Path.GetFileNameWithoutExtension(filename);
 
-            _downloaded = false;
+            _downloadSub = false;
 
             foreach (string expression in expressions)
             {
@@ -36,7 +52,10 @@ namespace tv_organize.Data
                     var regexStandard = new Regex(expression, RegexOptions.IgnoreCase);
                     Match episode = regexStandard.Match(filename);
 
-                    Show = Util.UppercaseFirst(episode.Groups["series_name"].Value);
+                    string tmpShow = episode.Groups["series_name"].Value;
+                    tmpShow = tmpShow.Replace('.', ' ');
+
+                    Show = Util.UppercaseEachWord(tmpShow);
                     Season = Int32.Parse(episode.Groups["season_num"].Value);
                     EpisodeNumber = Int32.Parse(episode.Groups["ep_num"].Value);
                     break;
@@ -73,16 +92,16 @@ namespace tv_organize.Data
             set { _filePath = value; this.NotifyPropertyChanged("FilePath"); }
         }
 
-        public string Languages
+        public string Language
         {
-            get { return _languages; }
-            set { _languages = value; this.NotifyPropertyChanged("Languages"); }
+            get { return _language; }
+            set { _language = value; this.NotifyPropertyChanged("Language"); }
         }
 
-        public bool Downloaded
+        public bool DownloadSub
         {
-            get { return _downloaded; }
-            set { _downloaded = value; this.NotifyPropertyChanged("Downloaded"); }
+            get { return _downloadSub; }
+            set { _downloadSub = value; this.NotifyPropertyChanged("DownloadSub"); }
         }
 
 

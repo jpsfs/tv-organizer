@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBarLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -36,6 +37,12 @@
             this.textBoxSelectedPath = new System.Windows.Forms.TextBox();
             this.buttonChoosePath = new System.Windows.Forms.Button();
             this.splitContainerMainWindow = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxPrimaryLanguage = new System.Windows.Forms.ComboBox();
+            this.linkLabelDevelopedBy = new System.Windows.Forms.LinkLabel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.linkLabelEasySubtitles = new System.Windows.Forms.LinkLabel();
+            this.checkBoxManualPath = new System.Windows.Forms.CheckBox();
             this.buttonSearchSubtitles = new System.Windows.Forms.Button();
             this.buttonDownloadSubtitles = new System.Windows.Forms.Button();
             this.buttonOrganizeFolders = new System.Windows.Forms.Button();
@@ -45,12 +52,12 @@
             this.backgroundWorkerSearchSubtitles = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorkerDownloadSubtitles = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorkerOrganizeFolders = new System.ComponentModel.BackgroundWorker();
-            this.checkBoxManualPath = new System.Windows.Forms.CheckBox();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMainWindow)).BeginInit();
             this.splitContainerMainWindow.Panel1.SuspendLayout();
             this.splitContainerMainWindow.Panel2.SuspendLayout();
             this.splitContainerMainWindow.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEpisodes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,7 +68,7 @@
             this.toolStripProgressBar});
             this.statusStrip.Location = new System.Drawing.Point(0, 565);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(838, 22);
+            this.statusStrip.Size = new System.Drawing.Size(747, 22);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -114,6 +121,11 @@
             // 
             // splitContainerMainWindow.Panel1
             // 
+            this.splitContainerMainWindow.Panel1.Controls.Add(this.label1);
+            this.splitContainerMainWindow.Panel1.Controls.Add(this.comboBoxPrimaryLanguage);
+            this.splitContainerMainWindow.Panel1.Controls.Add(this.linkLabelDevelopedBy);
+            this.splitContainerMainWindow.Panel1.Controls.Add(this.pictureBox1);
+            this.splitContainerMainWindow.Panel1.Controls.Add(this.linkLabelEasySubtitles);
             this.splitContainerMainWindow.Panel1.Controls.Add(this.checkBoxManualPath);
             this.splitContainerMainWindow.Panel1.Controls.Add(this.buttonSearchSubtitles);
             this.splitContainerMainWindow.Panel1.Controls.Add(this.buttonDownloadSubtitles);
@@ -126,9 +138,80 @@
             // splitContainerMainWindow.Panel2
             // 
             this.splitContainerMainWindow.Panel2.Controls.Add(this.dataGridViewEpisodes);
-            this.splitContainerMainWindow.Size = new System.Drawing.Size(838, 587);
+            this.splitContainerMainWindow.Size = new System.Drawing.Size(747, 587);
             this.splitContainerMainWindow.SplitterDistance = 142;
             this.splitContainerMainWindow.TabIndex = 5;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(187, 109);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 13);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Primary Language";
+            // 
+            // comboBoxPrimaryLanguage
+            // 
+            this.comboBoxPrimaryLanguage.Enabled = false;
+            this.comboBoxPrimaryLanguage.FormattingEnabled = true;
+            this.comboBoxPrimaryLanguage.Items.AddRange(new object[] {
+            "pt",
+            "en",
+            "fr",
+            "de",
+            "rm"});
+            this.comboBoxPrimaryLanguage.Location = new System.Drawing.Point(288, 104);
+            this.comboBoxPrimaryLanguage.Name = "comboBoxPrimaryLanguage";
+            this.comboBoxPrimaryLanguage.Size = new System.Drawing.Size(49, 21);
+            this.comboBoxPrimaryLanguage.TabIndex = 1;
+            this.comboBoxPrimaryLanguage.SelectionChangeCommitted += new System.EventHandler(this.comboBoxPrimaryLanguage_SelectionChangeCommitted);
+            // 
+            // linkLabelDevelopedBy
+            // 
+            this.linkLabelDevelopedBy.AutoSize = true;
+            this.linkLabelDevelopedBy.LinkArea = new System.Windows.Forms.LinkArea(41, 16);
+            this.linkLabelDevelopedBy.Location = new System.Drawing.Point(628, 42);
+            this.linkLabelDevelopedBy.Name = "linkLabelDevelopedBy";
+            this.linkLabelDevelopedBy.Size = new System.Drawing.Size(107, 55);
+            this.linkLabelDevelopedBy.TabIndex = 12;
+            this.linkLabelDevelopedBy.TabStop = true;
+            this.linkLabelDevelopedBy.Text = "Developed By:\r\n    José Pedro Silva\r\n    http://jpsfs.com\r\n    Version 0.1\r\n";
+            this.linkLabelDevelopedBy.UseCompatibleTextRendering = true;
+            this.linkLabelDevelopedBy.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDevelopedBy_LinkClicked);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::tv_organize.Properties.Resources.tv_organizer_logo;
+            this.pictureBox1.Location = new System.Drawing.Point(519, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(103, 115);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 11;
+            this.pictureBox1.TabStop = false;
+            // 
+            // linkLabelEasySubtitles
+            // 
+            this.linkLabelEasySubtitles.AutoSize = true;
+            this.linkLabelEasySubtitles.LinkArea = new System.Windows.Forms.LinkArea(15, 5);
+            this.linkLabelEasySubtitles.Location = new System.Drawing.Point(628, 110);
+            this.linkLabelEasySubtitles.Name = "linkLabelEasySubtitles";
+            this.linkLabelEasySubtitles.Size = new System.Drawing.Size(112, 17);
+            this.linkLabelEasySubtitles.TabIndex = 10;
+            this.linkLabelEasySubtitles.TabStop = true;
+            this.linkLabelEasySubtitles.Text = "Subtitles from SubDB";
+            this.linkLabelEasySubtitles.UseCompatibleTextRendering = true;
+            this.linkLabelEasySubtitles.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelEasySubtitles_LinkClicked);
+            // 
+            // checkBoxManualPath
+            // 
+            this.checkBoxManualPath.AutoSize = true;
+            this.checkBoxManualPath.Location = new System.Drawing.Point(15, 109);
+            this.checkBoxManualPath.Name = "checkBoxManualPath";
+            this.checkBoxManualPath.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxManualPath.TabIndex = 9;
+            this.checkBoxManualPath.Text = "Enable Manual Path";
+            this.checkBoxManualPath.UseVisualStyleBackColor = true;
             // 
             // buttonSearchSubtitles
             // 
@@ -178,11 +261,12 @@
             // 
             this.dataGridViewEpisodes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewEpisodes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewEpisodes.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridViewEpisodes.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewEpisodes.Name = "dataGridViewEpisodes";
-            this.dataGridViewEpisodes.Size = new System.Drawing.Size(838, 441);
+            this.dataGridViewEpisodes.Size = new System.Drawing.Size(747, 441);
             this.dataGridViewEpisodes.TabIndex = 0;
+            this.dataGridViewEpisodes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dataGridViewEpisodes_DataBindingComplete);
+            this.dataGridViewEpisodes.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewEpisodes_EditingControlShowing);
             // 
             // backgroundWorkerSearchEpisodes
             // 
@@ -212,26 +296,16 @@
             this.backgroundWorkerOrganizeFolders.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             this.backgroundWorkerOrganizeFolders.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerOrganizeFolders_RunWorkerCompleted);
             // 
-            // checkBoxManualPath
-            // 
-            this.checkBoxManualPath.AutoSize = true;
-            this.checkBoxManualPath.Location = new System.Drawing.Point(15, 109);
-            this.checkBoxManualPath.Name = "checkBoxManualPath";
-            this.checkBoxManualPath.Size = new System.Drawing.Size(122, 17);
-            this.checkBoxManualPath.TabIndex = 9;
-            this.checkBoxManualPath.Text = "Enable Manual Path";
-            this.checkBoxManualPath.UseVisualStyleBackColor = true;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(838, 587);
+            this.ClientSize = new System.Drawing.Size(747, 587);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.splitContainerMainWindow);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "Tv Series Organizer";
-            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.splitContainerMainWindow.Panel1.ResumeLayout(false);
@@ -239,6 +313,7 @@
             this.splitContainerMainWindow.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMainWindow)).EndInit();
             this.splitContainerMainWindow.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEpisodes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -265,6 +340,11 @@
         private System.ComponentModel.BackgroundWorker backgroundWorkerDownloadSubtitles;
         private System.ComponentModel.BackgroundWorker backgroundWorkerOrganizeFolders;
         private System.Windows.Forms.CheckBox checkBoxManualPath;
+        private System.Windows.Forms.LinkLabel linkLabelEasySubtitles;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.LinkLabel linkLabelDevelopedBy;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxPrimaryLanguage;
     }
 }
 
